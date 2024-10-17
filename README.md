@@ -20,4 +20,13 @@ Import-Module -Name AzureAD
 
 Import-Module -Name AzureAD -Force
 
+To enable users to execute ps1 scripts:
+go to system settings -> Update & Security -> For Developers -> PowerShell
 
+as admin: 
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Restricted
+
+>>> https://admindroid.com/how-to-get-mfa-disabled-users-report-in-microsoft-365
+
+Get-MsolUser -all | select DisplayName,UserPrincipalName,@{N= "MFAStatus"; E ={if( $_.StrongAuthenticationRequirements.State -ne $null) {$_.StrongAuthenticationRequirements.State} else {"Disabled" }}} | where MFAStatus -eq "Disabled" 
