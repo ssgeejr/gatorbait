@@ -1,0 +1,1 @@
+Get-MsolUser -all | select DisplayName,UserPrincipalName, IsLicensed,@{N= "MFAStatus"; E ={if( $_.StrongAuthenticationRequirements.State -ne $null) {$_.StrongAuthenticationRequirements.State} else {"Disabled" }}} | where MFAStatus -eq "Disabled" | Export-Csv -Path "mfaSanityCheck.csv" -NoTypeInformation
