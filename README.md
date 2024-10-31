@@ -1,6 +1,32 @@
 # gatorbait
 cybersecurity tools
 
+
+
+https://lazyadmin.nl/powershell/list-office365-mfa-status-powershell/
+
+File: https://github.com/ruudmens/LazyAdmin/blob/master/Office365/MFAStatus.ps1
+
+#get details by user
+Get-MFAStatus.ps1 -UserPrincipalName 'johndoe@contoso.com'
+
+#to export 
+	Get-MFAStatus.ps1 -UserPrincipalName 'johndoe@contoso.com' | Export-CSV mfasearch.csv -noTypeInformation
+
+
+#Getting a list of all users and their MFA Status
+Get-MFAStatus.ps1 | Export-CSV c:\temp\mfastatus.csv -noTypeInformation
+
+#Get only the users without MFA
+	Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly.csv -noTypeInformation
+
+
+
+
+## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 https://learn.microsoft.com/en-us/answers/questions/1226005/azure-cloud-shell-the-term-get-msoluser-is-not-rec
 
 
