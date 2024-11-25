@@ -82,7 +82,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Restricted
 
 >>> https://admindroid.com/how-to-get-mfa-disabled-users-report-in-microsoft-365
 
-Get-MsolUser -all | select DisplayName,UserPrincipalName,@{N= "MFAStatus"; E ={if( $_.StrongAuthenticationRequirements.State -ne $null) {$_.StrongAuthenticationRequirements.State} else {"Disabled" }}} | where MFAStatus -eq "Disabled" 
+Get-MsolUser -all | select DisplayName,UserPrincipalName,@{N= "MFAStatus"; E ={if( $_.StrongAuthenticationRequirements.State -ne $null) {$_.StrongAuthenticationRequirements.State} else {"Disabled" }}} | where MFAStatus -eq "Disabled"  | Export-Csv -Path "C:\Path\To\Save\UserInboxRules.csv" -NoTypeInformation  
 
 
 

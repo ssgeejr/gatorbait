@@ -15,22 +15,29 @@ Install-Module MSOnline -Force
 .\pscontrol.cmd --unlock 
 
 #get details for a single user
-Get-MFAStatus.ps1 -UserPrincipalName 'johndoe@contoso.com'
+.\Get-MFAStatus.ps1 -UserPrincipalName 'johndoe@contoso.com'
+
+
+
 
 #export those single user results to a csv files
-Get-MFAStatus.ps1 -UserPrincipalName 'johndoe@contoso.com' | Export-CSV mfasearch.csv -noTypeInformation
+.\Get-MFAStatus.ps1 -UserPrincipalName 'johndoe@contoso.com' | Export-CSV mfasearch.csv -noTypeInformation
 
 
 #Get only the users without MFA
-Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly.csv -noTypeInformation
+.\Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly_112524.csv -noTypeInformation
 
 
 #Get all valid users and their settings
-Get-MFAStatus.ps1 | Export-CSV mfastatus.csv -noTypeInformation
-
-
+.\Get-MFAStatus.ps1 | Export-CSV mfastatus.csv -noTypeInformation
 
 
 
 #When you're done, lock powershell from running any ps1 scripts
 .\pscontrol.cmd 
+
+
+
+Get-MsolUser -all | select DisplayName,UserPrincipalName,@{N= "MFAStatus"; E ={if( $_.StrongAuthenticationRequirements.State -ne $null) {$_.StrongAuthenticationRequirements.State} else {"Disabled" }}} | where MFAStatus -eq "Disabled"  | Export-Csv -Path "azureMFA.csv" -NoTypeInformation  
+
+
