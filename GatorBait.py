@@ -1,56 +1,95 @@
 import subprocess
 import csv
+import mysql.connector
+from datetime import datetime
+from Crocodile import Saturn
 
-# Define the path to the CSV file
-csv_file_path = "withOutMFAOnly_12122024.csv"
+class Buddy:
+    def __init__(self):
+        self.batch_file = 'testMFAStatus.cmd'
+        self.db_connection = None
+        self.db_cursor = None
 
+    def run_batch_file(self):
+        """Execute the batch file and capture the output."""
+        result = subprocess.run([self.batch_file], capture_output=True, text=True)
+        if result.returncode != 0:
+            print("Error running batch file:", result.stderr)
+            exit(1)
+        # The result output is expected to be the current date
+        self.current_date = result.stdout.strip()
+        print(f'DATE: {self.current_date}')
+        self.filename = f'withOutMFAOnly_{self.current_date}.csv'
+        print(f'FILENAME: {self.filename}')
+        #return current_date
 
-# Define the PowerShell script
-def run_powershell_command(command):
-    """Runs a PowerShell command and returns the output."""
-    result = subprocess.run(["powershell", "-Command", command], capture_output=True, text=True)
-    if result.returncode == 0:
-        return result.stdout.strip()
-    else:
-        print(f"Error: {result.stderr.strip()}")
-        return None
+    def read_csv_and_insert_into_db(self):
+        """Read the CSV file and insert its contents into MySQL database."""
+        # Open CSV file
+        try:
+            with open(self.filename, mode='r', newline='') as file:
+                csv_reader = csv.DictReader(file)
+                insert_query = """
+                     INSERT INTO gator (displayname, email, department, isadmin, mfaenabled)
+                     VALUES (%s, %s, %s, %s, %s)
+                 """
+                loaded_records = 0
+                for row in csv_reader:
+                    data = (
+                        row['DisplayName'],
+                        row['UserPrincipalName'],
+                        row['Department'],
+                        row['isAdmin'],
+                        row['MFA Enabled']
+                    )
+                    self.db_cursor.execute(insert_query, data)
+                    loaded_records += 1
+                    if (loaded_records % 100) == 0:
+                        self.db_connection.commit()
+            self.db_connection.commit()
+            print(f'Total records loaded: {loaded_records}')
+        except mysql.connector.Error as err:
+            print("Error inserting into database:", err)
 
+    def connect_to_db(self):
+        """Establish a connection to the MySQL database."""
+        try:
+            saturn = Saturn()
 
-# Step 1: Connect to MsolService
-print("Connecting to Microsoft Online Service...")
-connect_command = "Connect-MsolService"
-connect_output = run_powershell_command(connect_command)
+            self.db_connection = mysql.connector.connect(
+                host=saturn.getServer(),         # Update with your MySQL server details
+                user=saturn.getUsername(),              # Update with your MySQL username
+                password=saturn.getPassword(),      # Update with your MySQL password
+                database=saturn.getDB()
+            )
+            self.db_cursor = self.db_connection.cursor()
+        except mysql.connector.Error as err:
+            print("Error connecting to MySQL:", err)
+            exit(1)
 
-if connect_output is None:
-    print("Failed to connect to Microsoft Online Service. Exiting.")
-    exit()
+    def close_db_connection(self):
+        """Close the database connection."""
+        if self.db_cursor:
+            self.db_cursor.close()
+        if self.db_connection:
+            self.db_connection.close()
 
-print("Connected successfully!")
+    def close_file(self, file):
+        """Close the file."""
+        file.close()
 
-# Step 2: Read the CSV file and process each row
-print("Processing CSV file...")
-try:
-    with open(csv_file_path, mode="r") as file:
-        csv_reader = csv.reader(file)
-        headers = next(csv_reader)  # Skip the header row
+    def process(self):
+        """Main process for the Buddy class."""
+        #current_date = self.run_batch_file()
+        #csv_filename = f"{current_date}.csv"
+        #print(f"Processing file: {csv_filename}")
 
-        # Ensure the CSV is formatted correctly
-        if len(headers) < 1:
-            print("Error: CSV file must have at least one column.")
-            exit()
+        self.run_batch_file()
+        self.connect_to_db()
+        self.read_csv_and_insert_into_db()
+        self.close_db_connection()
 
-        for row in csv_reader:
-            if row:  # Skip empty rows
-                primary_key = row[1]  # Take the first column value as the primary key
-
-                # Step 3: Execute Get-MsolUser for the primary key
-                command = f"Get-MsolUser -UserPrincipalName {primary_key} | Select-Object UserPrincipalName, DisplayName, Department"
-                output = run_powershell_command(command)
-
-                # Print the result for each user
-                if output:
-                    print(f"Result for {primary_key}:\n{output}\n")
-except FileNotFoundError:
-    print(f"Error: The file '{csv_file_path}' does not exist. Please provide a valid path.")
-except Exception as e:
-    print(f"An error occurred: {e}")
+if __name__ == '__main__':
+    buddy = Buddy()
+    buddy.process()
+    #buddy.run_batch_file()
