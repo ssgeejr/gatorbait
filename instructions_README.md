@@ -25,7 +25,7 @@ Install-Module MSOnline -Force
 
 
 #Get only the users without MFA
-.\Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly_112524.csv -noTypeInformation
+.\Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly_121024.csv -noTypeInformation
 
 
 #Get all valid users and their settings

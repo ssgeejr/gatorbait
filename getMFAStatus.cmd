@@ -13,6 +13,13 @@ set "$date=%$date:/=%"
 
 :: Execute the PowerShell script and generate the output file
 :: .\Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly_%MMDDYY%.csv -noTypeInformation
+
+if exist withOutMFAOnly_%$date%.csv (
+	del /Q withOutMFAOnly_%$date%.csv
+    echo File withOutMFAOnly_%$date%.csv deleted successfully ...
+) else (
+    echo Failed to find file: withOutMFAOnly_%$date%.csv ...
+)
 powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ".\Get-MFAStatus.ps1 -withOutMFAOnly | Export-Csv -Path 'withOutMFAOnly_%$date%.csv' -NoTypeInformation"
 
 :: Confirm completion

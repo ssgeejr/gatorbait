@@ -163,6 +163,7 @@ if ($PSBoundParameters.ContainsKey('UserPrincipalName')) {
       [PSCustomObject]@{
         DisplayName       = $MsolUser.DisplayName
         UserPrincipalName = $MsolUser.UserPrincipalName
+		Department        = if ($MsolUser.Department) { $MsolUser.Department } else { "-" }
         isAdmin           = if ($listAdmins -and $admins.EmailAddress -match $MsolUser.UserPrincipalName) {$true} else {"-"}
         MFAEnabled        = if ($MsolUser.StrongAuthenticationMethods) {$true} else {$false}
         MFAType           = $Method
@@ -202,6 +203,7 @@ elseif ($adminsOnly) {
     [PSCustomObject]@{
       DisplayName       = $MsolUser.DisplayName
       UserPrincipalName = $MsolUser.UserPrincipalName
+	  Department        = if ($MsolUser.Department) { $MsolUser.Department } else { "-" }
       isAdmin           = $true
       "MFA Enabled"     = if ($MsolUser.StrongAuthenticationMethods) {$true} else {$false}
       "MFA Default Type"= $Method
@@ -241,6 +243,7 @@ else {
           [PSCustomObject]@{
             DisplayName       = $MsolUser.DisplayName
             UserPrincipalName = $MsolUser.UserPrincipalName
+			Department        = if ($MsolUser.Department) { $MsolUser.Department } else { "-" }
             isAdmin           = if ($listAdmins -and ($admins.EmailAddress -match $MsolUser.UserPrincipalName)) {$true} else {"-"}
             "MFA Enabled"     = $false
             "MFA Type"        = "-"
@@ -254,6 +257,7 @@ else {
         [PSCustomObject]@{
           DisplayName       = $MsolUser.DisplayName
           UserPrincipalName = $MsolUser.UserPrincipalName
+		  Department        = if ($MsolUser.Department) { $MsolUser.Department } else { "-" }
           isAdmin           = if ($listAdmins -and ($admins.EmailAddress -match $MsolUser.UserPrincipalName)) {$true} else {"-"}
           "MFA Enabled"     = if ($MsolUser.StrongAuthenticationMethods) {$true} else {$false}
           "MFA Type"        = $Method
