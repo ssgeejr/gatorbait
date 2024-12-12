@@ -29,13 +29,16 @@ class Buddy:
         try:
             with open(self.filename, mode='r', newline='') as file:
                 csv_reader = csv.DictReader(file)
+                self.db_cursor.execute("delete from gator where 1=1")
+                self.db_connection.commit()
                 insert_query = """
-                     INSERT INTO gator (displayname, email, department, isadmin, mfaenabled)
-                     VALUES (%s, %s, %s, %s, %s)
+                     INSERT INTO gator (gatorid, displayname, email, department, isadmin, mfaenabled)
+                     VALUES (%s, %s, %s, %s, %s, %s)
                  """
                 loaded_records = 0
                 for row in csv_reader:
                     data = (
+                        self.current_date,
                         row['DisplayName'],
                         row['UserPrincipalName'],
                         row['Department'],
