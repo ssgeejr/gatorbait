@@ -21,10 +21,35 @@ if exist withOutMFAOnly_%$date%.csv (
 :: else (
 ::    echo Failed to find file: withOutMFAOnly_%$date%.csv ...
 :: )
-:: powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ".\Get-MFAStatus.ps1 -withOutMFAOnly | Export-Csv -Path 'withOutMFAOnly_%$date%.csv' -NoTypeInformation"
-echo %$date%
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ".\Get-MFAStatus.ps1 -withOutMFAOnly | Export-Csv -Path 'withOutMFAOnly_%$date%.csv' -NoTypeInformation"
+::echo %$date%
 :: Confirm completion
 :: echo Export completed, results saved to: withOutMFAOnly_%$date%.csv
+
+
+setlocal enabledelayedexpansion
+
+set filename=withOutMFAOnly_%$date%.csv	
+set targetdir=..\ceres
+
+mv "%filename%" "%targetdir%"
+if errorlevel 1 (
+    echo Failed to move the file: %filename%
+    exit /b 1
+)
+
+cd "%targetdir%"
+if errorlevel 1 (
+    echo Failed to change directory to: %targetdir%
+    exit /b 1
+)
+
+python Ceres.py -f "%filename%"
+if errorlevel 1 (
+    echo Failed to execute Ceres.py with the file: %filename%
+    exit /b 1
+)
+
 
 :: echo Revoking powershell script authority
 powershell -Command "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Restricted"
