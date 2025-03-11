@@ -5,7 +5,7 @@
 Import-Module Microsoft.Graph
 
 # Connect to Microsoft Graph with necessary permissions
-Connect-MgGraph -Scopes "User.Read.All", "AuditLog.Read.All", "Directory.Read.All"
+Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All" -Verbose
 
 # Define cutoff date (180 days ago)
 $CutoffDate = (Get-Date).AddDays(-180)

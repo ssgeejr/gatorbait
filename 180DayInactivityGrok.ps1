@@ -7,7 +7,7 @@ Connect-MsolService
 
 
 # Define the date 180 days ago
-$inactiveDate = (Get-Date).AddDays(-180)
+$inactiveDate = (Get-Date).AddDays(-30)
 
 # Get all users and filter based on last logon
 #Get-MsolUser -All | Where-Object { 
@@ -17,5 +17,5 @@ $inactiveDate = (Get-Date).AddDays(-180)
 Get-MsolUser -All | Where-Object { 
     (($_.LastLogonTimestamp -lt $inactiveDate) -or ($_.LastLogonTimestamp -eq $null)) -and 
     ($_.IsLicensed -eq $true)
-} | Select-Object FirstName, LastName, UserPrincipalName, Department, @{Name="Licenses";Expression={$_.Licenses.AccountSkuId}} | Export-Csv -Path "InactiveUsers_Details.csv" -NoTypeInformation
+} | Select-Object FirstName, LastName, UserPrincipalName, Department, @{Name="Licenses";Expression={$_.Licenses.AccountSkuId}} | Export-Csv -Path "30day_InactiveUsers_Details.csv" -NoTypeInformation
 
