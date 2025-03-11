@@ -7,8 +7,6 @@
     <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="making some fine grain changes, the core of the application remains the same">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/getMFAStatus.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/getMFAStatus.cmd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mysql.db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/mysql.db.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testMFAStatus.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/testMFAStatus.cmd" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +38,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/dev/wmmc/ceres"
   }
 }]]></component>

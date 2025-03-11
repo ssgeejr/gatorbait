@@ -17,34 +17,53 @@ set "$date=%$date:/=%"
 if exist withOutMFAOnly_%$date%.csv (
  	del /Q withOutMFAOnly_%$date%.csv
 )
-::      echo File withOutMFAOnly_%$date%.csv deleted successfully ...
-:: else (
-::    echo Failed to find file: withOutMFAOnly_%$date%.csv ...
-:: )
-powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ".\Get-MFAStatus.ps1 -withOutMFAOnly | Export-Csv -Path 'withOutMFAOnly_%$date%.csv' -NoTypeInformation"
-::echo %$date%
-:: Confirm completion
-:: echo Export completed, results saved to: withOutMFAOnly_%$date%.csv
 
+echo
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ".\Get-MFAStatus.ps1 -withOutMFAOnly | Export-Csv -Path 'withOutMFAOnly_%$date%.csv' -NoTypeInformation"
+
+cd ..\ceres
+
+python Ceres.py -f "%filename%"
+if errorlevel 1 (
+    echo Failed to execute Ceres.py with the file: %filename%
+    exit /b 1
+)
+
+:: echo Revoking powershell script authority
+powershell -Command "Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Restricted"
+:: powershell -Command "Get-ExecutionPolicy"
+
+exit 
 
 setlocal enabledelayedexpansion
 
-set filename=withOutMFAOnly_%$date%.csv	
-set targetdir=..\ceres
+set filename=withOutMFAOnly_%$date%.csv
+set targetdir=..\ceres\
 
-mv "%filename%" "%targetdir%"
+
+
+echo %filename%
+echo copy to 
+echo %targetdir%
+
+
+copy withOutMFAOnly_%$date%.csv %targetdir%
 if errorlevel 1 (
-    echo Failed to move the file: %filename%
+    echo "'Failed to copy the file: %filename%'"
+	type errorlog.txt
     exit /b 1
 )
 
 cd "%targetdir%"
 if errorlevel 1 (
     echo Failed to change directory to: %targetdir%
+	type errorlog.txt
     exit /b 1
 )
 
-python Ceres.py -f "%filename%"
+:: python Ceres.py -f "%filename%"
+echo **** simulation under way ****
 if errorlevel 1 (
     echo Failed to execute Ceres.py with the file: %filename%
     exit /b 1
