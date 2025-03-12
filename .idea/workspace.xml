@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="making some fine grain changes, the core of the application remains the same">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/getMFAStatus.cmd" beforeDir="false" afterPath="$PROJECT_DIR$/getMFAStatus.cmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Graph180DayInactivityGrok.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/Graph180DayInactivityGrok.ps1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XGraph180DayInactivityGrok.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/XGraph180DayInactivityGrok.ps1" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,7 +40,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/dev/wmmc/ceres"
+    "last_opened_file_path": "C:/dev/wmmc/ceres",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
