@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="made some minor changes that now only track active accounts for signins 30-180 and added the date to the filename.">
-      <change afterPath="$PROJECT_DIR$/MFAActiveViolations.ps1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/MFAActiveUserAudit.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
