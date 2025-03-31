@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="made some minor changes that now only track active accounts for signins 30-180 and added the date to the filename.">
-      <change afterPath="$PROJECT_DIR$/MFAActiveUserAudit.ps1" afterDir="false" />
+    <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="all these problems caused by running powershell as administrator .. so silly! The libraries were installed for &quot;user&quot; - so naturally, admin didn't have them availble. No different than pip :(">
+      <change afterPath="$PROJECT_DIR$/MFAActiveViolations.cmd" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,13 +84,22 @@
       <option name="project" value="LOCAL" />
       <updated>1741785867463</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="all these problems caused by running powershell as administrator .. so silly! The libraries were installed for &quot;user&quot; - so naturally, admin didn't have them availble. No different than pip :(">
+      <option name="closed" value="true" />
+      <created>1742823611493</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742823611493</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="updating the new database code - everything is working and had been validated" />
     <MESSAGE value="making some fine grain changes, the core of the application remains the same" />
     <MESSAGE value="made some minor changes that now only track active accounts for signins 30-180 and added the date to the filename." />
-    <option name="LAST_COMMIT_MESSAGE" value="made some minor changes that now only track active accounts for signins 30-180 and added the date to the filename." />
+    <MESSAGE value="all these problems caused by running powershell as administrator .. so silly! The libraries were installed for &quot;user&quot; - so naturally, admin didn't have them availble. No different than pip :(" />
+    <option name="LAST_COMMIT_MESSAGE" value="all these problems caused by running powershell as administrator .. so silly! The libraries were installed for &quot;user&quot; - so naturally, admin didn't have them availble. No different than pip :(" />
   </component>
 </project>
