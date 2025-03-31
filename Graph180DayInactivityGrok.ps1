@@ -6,7 +6,7 @@ Import-Module Microsoft.Graph.Users -Force
 Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All", "AuditLog.Read.All" -Verbose
 
 # Define the date boundaries
-$minDays = (Get-Date).AddDays(-30)   # 30 days ago
+$minDays = (Get-Date).AddDays(-35)   # 35 days ago
 $maxDays = (Get-Date).AddDays(-180)  # 180 days ago
 $currentDate = Get-Date              # Today’s date for days calculation
 
