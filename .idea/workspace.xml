@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="working well, just adding a wrapper to eventually add all these reports into a single call command shell">
+    <list default="true" id="0c3dca5e-a050-4828-b7c6-f21ad1595e2f" name="Changes" comment="changed $minDays = (Get-Date).AddDays(-35)&#10;to give a long weekend for users that only log in monthly">
+      <change afterPath="$PROJECT_DIR$/MondayCybersecurityReport.ps1" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Graph180DayInactivityGrok.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/Graph180DayInactivityGrok.ps1" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +100,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743435946734</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="changed $minDays = (Get-Date).AddDays(-35)&#10;to give a long weekend for users that only log in monthly">
+      <option name="closed" value="true" />
+      <created>1743442059970</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1743442059970</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -109,6 +117,7 @@
     <MESSAGE value="made some minor changes that now only track active accounts for signins 30-180 and added the date to the filename." />
     <MESSAGE value="all these problems caused by running powershell as administrator .. so silly! The libraries were installed for &quot;user&quot; - so naturally, admin didn't have them availble. No different than pip :(" />
     <MESSAGE value="working well, just adding a wrapper to eventually add all these reports into a single call command shell" />
-    <option name="LAST_COMMIT_MESSAGE" value="working well, just adding a wrapper to eventually add all these reports into a single call command shell" />
+    <MESSAGE value="changed $minDays = (Get-Date).AddDays(-35)&#10;to give a long weekend for users that only log in monthly" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed $minDays = (Get-Date).AddDays(-35)&#10;to give a long weekend for users that only log in monthly" />
   </component>
 </project>
