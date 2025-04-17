@@ -6,7 +6,7 @@ Connect-MgGraph -Scopes "AuditLog.Read.All"
 
 # $ipAddress = "107.116.253.29"
 #$ipAddress = "67.209.233.72"
-$ipAddress = "2607:fb90:bf15:4f29:8c96:9948:43c8:acb7"
+$ipAddress = "2600:387:15:710::5"
 $signInEvents = Get-MgAuditLogSignIn -Filter "ipAddress eq '$ipAddress'"
 
 if ($signInEvents) {

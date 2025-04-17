@@ -121,7 +121,23 @@
       <option name="project" value="LOCAL" />
       <updated>1744034298315</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="New testing scripts for user managements">
+      <option name="closed" value="true" />
+      <created>1744249245660</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1744249245660</updated>
+    </task>
+    <task id="LOCAL-00010" summary="updated gitignore">
+      <option name="closed" value="true" />
+      <created>1744249264656</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1744249264656</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -133,6 +149,8 @@
     <MESSAGE value="working well, just adding a wrapper to eventually add all these reports into a single call command shell" />
     <MESSAGE value="changed $minDays = (Get-Date).AddDays(-35)&#10;to give a long weekend for users that only log in monthly" />
     <MESSAGE value="Added the all in one bundle of MondayCybersecurityReport file to do all the necessary reports - need to add the python code for Jira as well and then repackage in a new project so it's one and done when creating / reporting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the all in one bundle of MondayCybersecurityReport file to do all the necessary reports - need to add the python code for Jira as well and then repackage in a new project so it's one and done when creating / reporting" />
+    <MESSAGE value="New testing scripts for user managements" />
+    <MESSAGE value="updated gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated gitignore" />
   </component>
 </project>
