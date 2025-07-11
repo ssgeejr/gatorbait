@@ -7,7 +7,7 @@ Import-Module Microsoft.Graph.Identity.SignIns -Force
 Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All", "AuditLog.Read.All", "UserAuthenticationMethod.Read.All"  -Verbose
 
 # Define the date boundaries
-$minDays = (Get-Date).AddDays(-35)   # 35 days ago
+$minDays = (Get-Date).AddDays(-90)   # 90 days ago
 $maxDays = (Get-Date).AddDays(-180)  # 180 days ago
 $currentDate = Get-Date              # Today’s date for days calculation
 
@@ -17,10 +17,10 @@ Write-Host "MAX DAYS: " $maxDays
 # Get today’s date in MMddyyyy format for filenames
 $dateString = $currentDate.ToString("MMddyyyy")
 Write-Host "-------------------------------------------------"
-Write-Host "*** Starting Users Login > 30 AND < 180 Report ***"
+Write-Host "*** Starting Users Login > 90 AND < 180 Report ***"
 
-# First call: Users inactive between 30 and 180 days (only enabled accounts)
-$inactiveUsers30to180 = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, AssignedLicenses, SignInActivity, AccountEnabled | Where-Object {
+# First call: Users inactive between 90 and 180 days (only enabled accounts)
+$inactiveUsers90to180 = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, AssignedLicenses, SignInActivity, AccountEnabled | Where-Object {
     ($_.AssignedLicenses.Count -gt 0) -and
     ($_.AccountEnabled -eq $true) -and
     ($_.SignInActivity.LastSignInDateTime -lt $minDays) -and
@@ -32,7 +32,7 @@ $inactiveUsers30to180 = Get-MgUser -All -Property DisplayName, UserPrincipalName
                   @{Name="DaysSinceLastLogin";Expression={[math]::Floor(($currentDate - $_.SignInActivity.LastSignInDateTime).TotalDays)}}
 
 # Export to CSV for 30-180 days with date in filename
-$inactiveUsers30to180 | Export-Csv -Path "InactiveLicensedUsers_30to180_$dateString.csv" -NoTypeInformation
+$inactiveUsers90to180 | Export-Csv -Path "InactiveLicensedUsers_90to180_$dateString.csv" -NoTypeInformation
 Write-Host "USER LOGIN > 30 AND < 180 DAYS WRITTEN TO: InactiveLicensedUsers_30to180_$dateString.csv"
 
 Write-Host "-------------------------------------------------"

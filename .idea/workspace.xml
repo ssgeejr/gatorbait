@@ -14,6 +14,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="PowerShell File" />
       </list>
     </option>
   </component>
@@ -37,7 +38,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/dev/wmmc/telesto",
+    "last_opened_file_path": "C:/dev/814north/email_scraper",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   },
   "keyToStringList": {

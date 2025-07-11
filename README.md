@@ -1,6 +1,7 @@
 # gatorbait
 cybersecurity tools
 
+Unblock-File -Path "C:\dev\wmmc\gatorbait\GatorBait.ps1"
 
 
 https://lazyadmin.nl/powershell/list-office365-mfa-status-powershell/
