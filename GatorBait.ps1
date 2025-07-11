@@ -58,7 +58,7 @@ function Insert-ComplianceRecord {
         [object]$user,
         [int]$type
     )
-    Write-Host "[DEBUG] Inserting record for: $($user.DisplayName) (type $type)"
+    #Write-Host "[DEBUG] Inserting record for: $($user.DisplayName) (type $type)"
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = @"
         INSERT INTO compliance_audit_log
@@ -88,7 +88,7 @@ function Insert-ComplianceRecord {
 
     $cmd.Parameters.Add("@type", 1).Value = $type
     $cmd.ExecuteNonQuery() | Out-Null
-    Write-Host "[DEBUG] Insert successful"
+    #Write-Host "[DEBUG] Insert successful"
 }
 
 # Main routine
@@ -99,7 +99,7 @@ function Run-GatorbaitReport {
     Import-Module Microsoft.Graph.Identity.SignIns -Force
     Write-Host "[DEBUG] Modules imported successfully"
 
-    Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All", "AuditLog.Read.All", "UserAuthenticationMethod.Read.All"
+    Connect-MgGraph -Scopes "User.Read.All", "Directory.Read.All", "AuditLog.Read.All", "UserAuthenticationMethod.Read.All" -NoWelcome
     Write-Host "[DEBUG] Connected to Microsoft Graph"
 
     $config = Get-GatorbaitConfig
