@@ -4,6 +4,26 @@ cybersecurity tools
 Unblock-File -Path "C:\dev\wmmc\gatorbait\GatorBait.ps1"
 
 
+
+💡 Option: Use PdfSharp with PowerShell
+Here’s how to do it:
+
+1. Download PdfSharp.dll
+Get it from NuGet:
+https://www.nuget.org/packages/PDFsharp/1.50.5147
+Or direct:
+Download PDFsharp-MigraDoc Foundation
+
+Extract and copy PdfSharp.dll to your gatorbait\lib\ folder.
+
+
+https://www.nuget.org/downloads
+
+PS C:\dloads> nuget sources Add -Name "nuget.org" -Source "https://api.nuget.org/v3/index.json"
+Package source with Name: nuget.org added successfully.
+
+
+
 https://lazyadmin.nl/powershell/list-office365-mfa-status-powershell/
 
 File: https://github.com/ruudmens/LazyAdmin/blob/master/Office365/MFAStatus.ps1
