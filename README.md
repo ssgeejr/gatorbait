@@ -60,6 +60,77 @@ To always stay current with PowerShell 7+, use the Snap package (optional):
 `sudo snap install powershell --classic`
 That gives you the latest stable release, managed by Snap updates.
 
+
+
+You're missing the **Microsoft Graph SDK modules**, which aren't included by default in PowerShell — and your script expects at least these three:
+
+* `Microsoft.Graph.Authentication`
+* `Microsoft.Graph.Users`
+* `Microsoft.Graph.Identity.SignIns`
+
+And it's failing because:
+
+* The **modules aren’t installed**, and
+* Therefore, `Connect-MgGraph` (which is part of `Microsoft.Graph.Authentication`) isn't available.
+
+---
+
+## ✅ Fix: Install Microsoft Graph SDK Modules (AllUsers Scope)
+
+Run the following as root or with `sudo`:
+
+```bash
+sudo pwsh -Command 'Install-Module Microsoft.Graph -Scope AllUsers -Force'
+```
+
+> This will install the **entire Graph SDK**, including submodules like `Users`, `Authentication`, `Identity.SignIns`, etc.
+
+If you prefer to install only the required modules individually (faster, lighter), use:
+
+```bash
+sudo pwsh -Command 'Install-Module Microsoft.Graph.Authentication -Scope AllUsers -Force'
+sudo pwsh -Command 'Install-Module Microsoft.Graph.Users -Scope AllUsers -Force'
+sudo pwsh -Command 'Install-Module Microsoft.Graph.Identity.SignIns -Scope AllUsers -Force'
+```
+
+---
+
+## ✅ After Install
+
+You can verify the modules are globally available:
+
+```bash
+pwsh -Command 'Get-Module -ListAvailable Microsoft.Graph.*'
+```
+
+And test `Connect-MgGraph` manually:
+
+```bash
+pwsh
+> Import-Module Microsoft.Graph.Authentication
+> Connect-MgGraph -Scopes "User.Read.All"
+```
+
+---
+
+### 🔐 Optional: Suppress Trust Prompt
+
+If you see this during install:
+
+```
+Untrusted repository. You are installing the modules from an untrusted repository.
+```
+
+You can permanently trust the PowerShell Gallery:
+
+```bash
+sudo pwsh -Command 'Set-PSRepository -Name PSGallery -InstallationPolicy Trusted'
+```
+
+---
+
+
+
 ## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
