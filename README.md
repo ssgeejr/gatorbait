@@ -42,7 +42,20 @@ Get-MFAStatus.ps1 | Export-CSV c:\temp\mfastatus.csv -noTypeInformation
 	Get-MFAStatus.ps1 -withOutMFAOnly | Export-CSV withOutMFAOnly.csv -noTypeInformation
 
 
+## Install Powershell on Debian 
 
+sudo apt install -y wget apt-transport-https software-properties-common
+wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt update
+sudo apt install -y powershell
+
+Test with pwsh
+
+
+To always stay current with PowerShell 7+, use the Snap package (optional):
+`sudo snap install powershell --classic`
+That gives you the latest stable release, managed by Snap updates.
 
 ## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
