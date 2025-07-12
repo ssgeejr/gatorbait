@@ -10,6 +10,15 @@ SELECT
 FROM compliance_audit_log
 WHERE DATE(run_date) = '2025-07-11'
 
+select * 
+From compliance_audit_log
+WHERE DATE(run_date) = '2025-07-04'
+
+select type,count(*)
+From compliance_audit_log
+WHERE DATE(run_date) = '2025-07-11'
+group by type
+
 
 
 DELETE FROM compliance_audit_log
