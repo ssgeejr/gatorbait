@@ -1,7 +1,7 @@
 # gatorbait
 cybersecurity tools
 
-Unblock-File -Path "C:\dev\wmmc\gatorbait\GatorBait.ps1"
+Unblock-File -Path "%DEVHOME%\gatorbait\GatorBait.ps1"
 
 
 
