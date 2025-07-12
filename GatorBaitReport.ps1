@@ -187,8 +187,7 @@ function Report
     Set-Content -Path $filename -Value $global:reportBuilder.ToString()
 #    Set-Content -Path "MFA_Report.txt" -Value $global:reportBuilder.ToString()
 
-    #TODO
-    #Save report as a PDF, code broken in function Write-PdfReport ... in progress
+    #NEXT Save report as a PDF, code broken in function Write-PdfReport ... in progress
     #Write-PdfReport -text $global:reportBuilder.ToString()
 
 }
