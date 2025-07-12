@@ -50,4 +50,17 @@ if (-not (Test-Path $mysqlDll)) {
 } else {
     Write-Host "[INIT] Existing MySql.Data.dll found at: $mysqlDll"
 }
+
+$libDir = Join-Path $PSScriptRoot "lib"
+$mysqlDll = Join-Path $libDir "PdfSharp.dll"
+
+if (-not (Test-Path $mysqlDll)) {
+    Write-Host "[INIT] Missing PdfSharp.dll ..."
+    Write-Host "Missing command to auto install"
+    #NOTE: Create code to autoinstall PdfSharp.dll
+} else {
+    Write-Host "[INIT] Existing PdfSharp.dll found at: $mysqlDll"
+}
+
+
 Write-Host "[INIT] System compliant ... ready to go"
