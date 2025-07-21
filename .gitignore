@@ -3,6 +3,8 @@ db.ini
 lib/
 *.txt
 *.pdf
+*.html
+*.htm
 
 
 *.csv
