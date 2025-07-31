@@ -34,7 +34,7 @@ function Append-HeaderSection {
     Append-Html "<h3>📊 Summary</h3><ul>"
     foreach ($key in $titles.Keys) {
         $delta = $deltas[$key]
-        Append-Html "<li>[$($delta.curr)] $($titles[$key]) – Delta: (+$($delta.curr - $delta.prev))</li>"
+        Append-Html "<li>[$($delta.curr)] $($titles[$key]) – Delta: ($($delta.curr - $delta.prev))</li>"
     }
     Append-Html "</ul>"
 }

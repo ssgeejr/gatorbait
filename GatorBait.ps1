@@ -51,45 +51,53 @@ function Open-MySqlConnection {
     return $conn
 }
 
-# Insert a record into compliance_audit_log
 function Insert-ComplianceRecord {
     param(
         [object]$conn,
         [object]$user,
         [int]$type
     )
-    #Write-Host "[DEBUG] Inserting record for: $($user.DisplayName) (type $type)"
+
     $cmd = $conn.CreateCommand()
     $cmd.CommandText = @"
-        INSERT INTO compliance_audit_log
-        (name, email, department, lastlogin, numdays, type)
-        VALUES
-        (@name, @email, @department, @lastlogin, @numdays, @type);
+INSERT INTO compliance_audit_log
+(name, email, department, lastlogin, numdays, created, created_days, type)
+VALUES
+(@name, @email, @department, @lastlogin, @numdays, @created, @created_days, @type);
 "@
 
     $cmd.Parameters.Add("@name", 253).Value = $user.DisplayName
     $cmd.Parameters.Add("@email", 253).Value = $user.UserPrincipalName
     $cmd.Parameters.Add("@department", 253).Value = $user.Department
 
-    if ($type -eq 0) {
-        $cmd.Parameters.Add("@lastlogin", 12).Value = [DBNull]::Value
-        $cmd.Parameters.Add("@numdays", 3).Value = [DBNull]::Value
+    # Add last login and numdays if available
+    if ($user.SignInActivity.LastSignInDateTime) {
+        $lastLogin = [datetime]::Parse($user.SignInActivity.LastSignInDateTime)
+        $cmd.Parameters.Add("@lastlogin", 12).Value = $lastLogin
+        $days = ([datetime]::Now - $lastLogin).Days
+        $cmd.Parameters.Add("@numdays", 3).Value = $days
     } else {
-        if ($user.SignInActivity.LastSignInDateTime) {
-            $lastLogin = [datetime]::Parse($user.SignInActivity.LastSignInDateTime)
-            $cmd.Parameters.Add("@lastlogin", 12).Value = $lastLogin
-            $days = ([datetime]::Now - $lastLogin).Days
-            $cmd.Parameters.Add("@numdays", 3).Value = $days
-        } else {
-            $cmd.Parameters.Add("@lastlogin", 12).Value = [DBNull]::Value
-            $cmd.Parameters.Add("@numdays", 3).Value = [DBNull]::Value
-        }
+        $cmd.Parameters.Add("@lastlogin", 12).Value = [DBNull]::Value
+        $cmd.Parameters.Add("@numdays", 3).Value = 0
+    }
+
+    # Add created date if available
+    if ($user.CreatedDateTime) {
+        $created = [datetime]::Parse($user.CreatedDateTime)
+        $cmd.Parameters.Add("@created", 12).Value = $created
+        $createdDays = ([datetime]::Now - $created).Days
+        $cmd.Parameters.Add("@created_days", 3).Value = $createdDays
+    } else {
+        $cmd.Parameters.Add("@created", 12).Value = [DBNull]::Value
+        $cmd.Parameters.Add("@created_days", 3).Value = 0
     }
 
     $cmd.Parameters.Add("@type", 1).Value = $type
+
     $cmd.ExecuteNonQuery() | Out-Null
-    #Write-Host "[DEBUG] Insert successful"
 }
+
+
 
 # Main routine
 function Run-GatorbaitReport {
@@ -110,7 +118,7 @@ function Run-GatorbaitReport {
     $mfaInsertCount = 0
     try {
         Write-Host "[DEBUG] Pulling 90–180 day inactive users"
-        $users90to180 = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, SignInActivity, AssignedLicenses, AccountEnabled | Where-Object {
+        $users90to180 = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, SignInActivity, AssignedLicenses, AccountEnabled, CreatedDateTime | Where-Object {
             ($_.AssignedLicenses.Count -gt 0) -and ($_.AccountEnabled -eq $true) -and
             ($_.SignInActivity.LastSignInDateTime -lt $minDays) -and
             ($_.SignInActivity.LastSignInDateTime -ge $maxDays)
@@ -119,7 +127,7 @@ function Run-GatorbaitReport {
         Write-GatorLog "Inserted $($users90to180.Count) users (90–180 days)"
 
         Write-Host "[DEBUG] Pulling 180+ day inactive users"
-        $users180plus = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, SignInActivity, AssignedLicenses, AccountEnabled | Where-Object {
+        $users180plus = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, SignInActivity, AssignedLicenses, AccountEnabled, CreatedDateTime | Where-Object {
             ($_.AssignedLicenses.Count -gt 0) -and ($_.AccountEnabled -eq $true) -and
             ($_.SignInActivity.LastSignInDateTime -lt $maxDays)
         }
@@ -128,10 +136,9 @@ function Run-GatorbaitReport {
 
         Write-Host "[DEBUG] Pulling MFA non-compliant users"
 
-        # Get all active, licensed users
-        $activeLicensedUsers = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, AssignedLicenses, AccountEnabled | Where-Object {
-            ($_.AssignedLicenses.Count -gt 0) -and
-            ($_.AccountEnabled -eq $true)
+        # Get all active, licensed users with extended properties
+        $activeLicensedUsers = Get-MgUser -All -Property DisplayName, UserPrincipalName, Department, AssignedLicenses, AccountEnabled, CreatedDateTime, SignInActivity | Where-Object {
+            ($_.AssignedLicenses.Count -gt 0) -and ($_.AccountEnabled -eq $true)
         }
 
         # Initialize an array to store users without MFA
@@ -142,7 +149,7 @@ function Run-GatorbaitReport {
             # Get authentication methods for the user
             $authMethods = Get-MgUserAuthenticationMethod -UserId $user.UserPrincipalName
 
-            # Check if any MFA-capable methods are registered (e.g., Phone, FIDO2, Authenticator)
+            # Check if any MFA-capable methods are registered
             $mfaRegistered = $authMethods | Where-Object {
                 $_.AdditionalProperties["@odata.type"] -in @(
                     "#microsoft.graph.phoneAuthenticationMethod",
@@ -152,12 +159,16 @@ function Run-GatorbaitReport {
                 )
             }
 
-            # If no MFA methods are registered, add the user to the list
+            # If no MFA methods are registered, log the user
             if (-not $mfaRegistered) {
                 $mfaUser = [PSCustomObject]@{
                     DisplayName       = $user.DisplayName
                     UserPrincipalName = $user.UserPrincipalName
                     Department        = $user.Department
+                    CreatedDateTime   = $user.CreatedDateTime
+                    SignInActivity    = $user.SignInActivity
+#                    LastSignIn        = if ($user.SignInActivity) { $user.SignInActivity.LastSignInDateTime } else { $null }
+
                 }
                 Insert-ComplianceRecord -conn $conn -user $mfaUser -type 0
                 $mfaInsertCount++

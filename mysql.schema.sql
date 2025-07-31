@@ -10,8 +10,10 @@ CREATE TABLE IF NOT EXISTS compliance_audit_log (
     email       VARCHAR(64) NOT NULL,
     department  VARCHAR(64),
     lastlogin   DATETIME NULL,
-    numdays  	INT NULL,
+    numdays  	INT NOT NULL DEFAULT 0,
+	created_days INT NOT NULL DEFAULT 0,
     run_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	created 	DATETIME DEFAULT NULL,
     type        TINYINT NOT NULL CHECK (type IN (0, 1, 2))
 );
 
@@ -24,3 +26,5 @@ INSERT INTO XREF (`key`, `value`) VALUES
 (0, 'Non-Compliant MFA Users'),
 (1, 'Active Users Missing Office 365 Login > 90 Days'),
 (2, 'Active Users Missing Office 365 Login > 180 Days');
+
+ 

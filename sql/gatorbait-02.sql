@@ -1,5 +1,30 @@
 use gatorbait
 
+SELECT count(*) FROM gatorbait.compliance_audit_log
+where type = 0
+and date(run_date) = '2025-07-14'
+
+#select * from XREF
+
+
+select distinct(date(run_date)) FROM gatorbait.compliance_audit_log
+
+
+
+
+ALTER TABLE compliance_audit_log
+ADD COLUMN created DATETIME DEFAULT NULL AFTER department;
+
+
+ALTER TABLE compliance_audit_log
+ADD COLUMN created_days INT NOT NULL DEFAULT 0;
+
+UPDATE compliance_audit_log
+SET numdays = 0
+WHERE numdays IS NULL;
+
+ALTER TABLE compliance_audit_log
+MODIFY COLUMN numdays INT NOT NULL DEFAULT 0;
 
 select 
 	a.name,
