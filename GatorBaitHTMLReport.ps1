@@ -16,11 +16,13 @@ function Write-HtmlReport {
 
 function Start-HtmlDocument {
     Append-Html "<html><head><style>
-        body { font-family: Arial, sans-serif; font-size: 14px; color: #333; margin: 20px; }
-        h2, h3 { color: #2a2a2a; }
-        table { border-collapse: collapse; width: 900px; margin-top: 10px; table-layout: fixed; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        th { background-color: #f2f2f2; }
+    body { font-family: Arial, sans-serif; font-size: 14px; color: #333; margin: 20px; }
+    h2, h3 { color: #2a2a2a; }
+    ul { font-size: 14px; margin-left: 20px; }
+    li { margin-bottom: 4px; }
+    table { border-collapse: collapse; width: 900px; margin-top: 10px; table-layout: fixed; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    th { background-color: #f2f2f2; }
     </style></head><body>"
 }
 
@@ -30,43 +32,69 @@ function End-HtmlDocument {
 
 function Append-HeaderSection {
     param ($titles, $deltas)
+
     Append-Html "<h2>Cybersecurity Report – $(Get-Date -Format 'MMMM dd, yyyy')</h2>"
-    Append-Html "<h3>📊 Summary</h3><ul>"
+    Append-Html "<h3>📊 Summary</h3>"
+    Append-Html "<ul style='margin: 0 0 10px 20px; padding-left: 20px;'>"
+
     foreach ($key in $titles.Keys) {
         $delta = $deltas[$key]
-        Append-Html "<li>[$($delta.curr)] $($titles[$key]) – Delta: ($($delta.curr - $delta.prev))</li>"
+        Append-Html "<li style='font-size: 15px;'>[$($delta.curr)] $($titles[$key]) – Delta: ($($delta.curr - $delta.prev))</li>"
     }
+
     Append-Html "</ul>"
 }
 
+
+
+
+
 function Append-TableSection {
     param ($title, $rows)
-    $includeLogin = $title -like "*90 Days*" -or $title -like "*180 Days*"
+
     Append-Html "<h3>$title</h3><table><colgroup>
-        <col style='width: 300px;' /><col style='width: 300px;' /><col style='width: 300px;' />"
-    if ($includeLogin) {
-        Append-Html "<col style='width: 100px;' /><col style='width: 100px;' />"
-    }
-    Append-Html "</colgroup><thead><tr><th>Name</th><th>Email</th><th>Department</th>"
-    if ($includeLogin) {
-        Append-Html "<th>Last Login</th><th>#Days</th>"
-    }
-    Append-Html "</tr></thead><tbody>"
+        <col style='width: 220px;' /><col style='width: 250px;' /><col style='width: 150px;' />
+        <col style='width: 110px;' /><col style='width: 80px;' />
+        <col style='width: 110px;' /><col style='width: 80px;' />
+    </colgroup><thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Last Login</th>
+            <th># Days</th>
+            <th>Created</th>
+            <th># Days</th>
+        </tr>
+    </thead><tbody>"
 
     foreach ($row in $rows) {
-        $name = if ($row.name.Length -gt 28) { $row.name.Substring(0,28) } else { $row.name }
-        $email = if ($row.email.Length -gt 32) { $row.email.Substring(0,32) } else { $row.email }
-        $dept = if ($row.department.Length -gt 32) { $row.department.Substring(0,32) } else { $row.department }
-        if ($includeLogin) {
-            $login = if ($row.lastlogin -and $row.lastlogin -ne [DBNull]::Value) { ([datetime]$row.lastlogin).ToString("MM/dd/yy") } else { "" }
-            $days = $row.numdays
-            Append-Html ("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>" -f $name, $email, $dept, $login, $days)
+        $lastLogin = if ($row.lastlogin -and $row.lastlogin -ne [DBNull]::Value) {
+            ([datetime]$row.lastlogin).ToString("MM/dd/yy")
         } else {
-            Append-Html ("<tr><td>{0}</td><td>{1}</td><td>{2}</td></tr>" -f $name, $email, $dept)
+            ""
         }
+
+        $created = if ($row.created -and $row.created -ne [DBNull]::Value) {
+            ([datetime]$row.created).ToString("MM/dd/yy")
+        } else {
+            ""
+        }
+
+        Append-Html "<tr>
+            <td>$($row.name)</td>
+            <td>$($row.email)</td>
+            <td>$($row.department)</td>
+            <td>$lastLogin</td>
+            <td>$($row.numdays)</td>
+            <td>$created</td>
+            <td>$($row.created_days)</td>
+        </tr>"
     }
+
     Append-Html "</tbody></table>"
 }
+
 
 function Get-GatorbaitConfig {
     $configPath = Join-Path $HOME ".gatorbait\\gatorbait.cfg"
@@ -142,19 +170,21 @@ function Get-ReportRows {
     $runDate = $cmd.ExecuteScalar()
 
     $cmd = $conn.CreateCommand()
-    $cmd.CommandText = "SELECT name, email, department, lastlogin, numdays FROM compliance_audit_log WHERE DATE(run_date) = @runDate AND type = @type"
+    $cmd.CommandText = "SELECT name, email, department, created, created_days, lastlogin, numdays FROM compliance_audit_log WHERE DATE(run_date) = @runDate AND type = @type"
     $cmd.Parameters.Add("@runDate", [MySql.Data.MySqlClient.MySqlDbType]::Date).Value = $runDate
     $cmd.Parameters.Add("@type", [MySql.Data.MySqlClient.MySqlDbType]::Int32).Value = $type
 
     $reader = $cmd.ExecuteReader()
     $rows = @()
-    while ($reader.Read()) {
+      while ($reader.Read()) {
         $rows += [PSCustomObject]@{
-            name       = $reader["name"]
-            email      = $reader["email"]
-            department = $reader["department"]
-            lastlogin  = $reader["lastlogin"]
-            numdays    = $reader["numdays"]
+            name            = $reader["name"]
+            email           = $reader["email"]
+            department      = $reader["department"]
+            lastlogin       = $reader["lastlogin"]
+            numdays         = $reader["numdays"]
+			created         = $reader["created"]
+			created_days    = $reader["created_days"]
         }
     }
     $reader.Close()
